@@ -14,7 +14,7 @@ export class ApplicationStacks extends Construct {
     });
 
     new ApiStack(this, "ApiStack", {
-      lambdaIntegrationAPI: lambda.lambdaFunctionAPI,
+      spaceslambdaIntegrationAPI: lambda.spaceslambdaFunctionAPI,
     });
   }
 }

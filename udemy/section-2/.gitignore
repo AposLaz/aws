@@ -5,6 +5,9 @@ node_modules
 
 package-lock.json
 
+#VS CODE EXTENSIONS
+.vscode
+
 # CDK asset staging directory
 .cdk.staging
 cdk.out

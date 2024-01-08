@@ -6,7 +6,6 @@ import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ITable } from "aws-cdk-lib/aws-dynamodb";
 import path from "path";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 interface LambdaStackProps extends StackProps {
   dbSpacesTable: ITable;
@@ -14,24 +13,32 @@ interface LambdaStackProps extends StackProps {
 
 export class LambdaStack extends Stack {
   private suffixId: string;
-  public readonly lambdaFunctionAPI: LambdaIntegration;
+  public readonly spaceslambdaFunctionAPI: LambdaIntegration;
 
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
 
     this.suffixId = lastStringOfStackId(this.stackId);
 
-    const newLambda = new NodejsFunction(this, "LambdaHello", {
-      functionName: `new-lambda-${this.suffixId}`,
+    const spacesLambda = new NodejsFunction(this, "SpacesLambda", {
+      functionName: `spaces-lambda-${this.suffixId}`,
       runtime: Runtime.NODEJS_18_X,
       handler: "handler",
-      entry: path.join(__dirname, "..", "services", "lambdaFunction.ts"),
+      entry: path.join(
+        __dirname,
+        "..",
+        "services",
+        "api",
+        "spaces",
+        "spaceLambda.ts"
+      ),
       environment: {
         TABLE_SPACE_NAME: props.dbSpacesTable.tableName,
       },
     });
 
     //give policy to list buckets
+    /*
     newLambda.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
@@ -39,7 +46,7 @@ export class LambdaStack extends Stack {
         resources: ["*"], //bad practice
       })
     );
-
-    this.lambdaFunctionAPI = new LambdaIntegration(newLambda);
+      */
+    this.spaceslambdaFunctionAPI = new LambdaIntegration(spacesLambda);
   }
 }

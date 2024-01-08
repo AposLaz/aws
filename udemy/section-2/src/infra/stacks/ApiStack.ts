@@ -4,7 +4,7 @@ import { Construct } from "constructs";
 import { lastStringOfStackId } from "../services/helper";
 
 interface ApiStackProps extends StackProps {
-  lambdaIntegrationAPI: LambdaIntegration;
+  spaceslambdaIntegrationAPI: LambdaIntegration;
 }
 
 export class ApiStack extends Stack {
@@ -14,10 +14,11 @@ export class ApiStack extends Stack {
 
     this.suffixId = lastStringOfStackId(this.stackId);
     const api = new RestApi(this, "SpacesAPI", {
-      restApiName: `lambda-rest-api-${this.suffixId}`,
+      restApiName: `spaces-rest-api-${this.suffixId}`,
     });
 
     const resources = api.root.addResource("spaces");
-    resources.addMethod("GET", props.lambdaIntegrationAPI);
+    resources.addMethod("GET", props.spaceslambdaIntegrationAPI);
+    resources.addMethod("POST", props.spaceslambdaIntegrationAPI);
   }
 }
