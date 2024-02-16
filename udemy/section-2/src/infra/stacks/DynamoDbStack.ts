@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, ITable, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
 import { lastStringOfStackId } from "../services/helper";
@@ -15,9 +15,10 @@ export class DynamoDbStack extends Stack {
     const initDynamoDbTable = new Table(this, "SpaceTable", {
       tableName: `space-${this.suffix}`,
       partitionKey: {
-        name: "ID",
+        name: "id",
         type: AttributeType.STRING,
       },
+      removalPolicy: RemovalPolicy.DESTROY,
     });
 
     this.spacesDynamoDbTable = initDynamoDbTable;

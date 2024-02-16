@@ -6,6 +6,7 @@ import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ITable } from "aws-cdk-lib/aws-dynamodb";
 import path from "path";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 interface LambdaStackProps extends StackProps {
   dbSpacesTable: ITable;
@@ -24,18 +25,30 @@ export class LambdaStack extends Stack {
       functionName: `spaces-lambda-${this.suffixId}`,
       runtime: Runtime.NODEJS_18_X,
       handler: "handler",
-      entry: path.join(
-        __dirname,
-        "..",
-        "services",
-        "api",
-        "spaces",
-        "spaceLambda.ts"
-      ),
+      entry: path.join(__dirname, "..", "services", "spaces", "router.ts"),
       environment: {
         TABLE_SPACE_NAME: props.dbSpacesTable.tableName,
       },
     });
+
+    //give policy for dynamodb
+    spacesLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: [
+          "dynamodb:PutItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:Scan",
+          "dynamodb:GetItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:UpdateItem",
+        ],
+        resources: [props.dbSpacesTable.tableArn], //give access to write only to this dynamo DB
+      })
+    );
+
+    this.spaceslambdaFunctionAPI = new LambdaIntegration(spacesLambda);
 
     //give policy to list buckets
     /*
@@ -47,6 +60,5 @@ export class LambdaStack extends Stack {
       })
     );
       */
-    this.spaceslambdaFunctionAPI = new LambdaIntegration(spacesLambda);
   }
 }

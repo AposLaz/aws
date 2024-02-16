@@ -5,6 +5,10 @@
 
 # Section 2
 
+<p>Create an app with LB -> Lambda -> DynamoDB </p>
+<a href="./udemy/section-2/">Go to Section 1</a>
+
+
 # CloudFormation
 
 Infrastructure as code solution provived by AWS called CDK
