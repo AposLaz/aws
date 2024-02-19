@@ -8,12 +8,26 @@ import {
   updateSpaceById,
 } from "./services";
 import { MissingFieldsError } from "./errorHandler";
+import { getSegment } from "aws-xray-sdk-core";
 
 export const handler = async (
   event: APIGatewayProxyEvent,
   context: Context
 ): Promise<APIGatewayProxyResult> => {
   let message: string = "";
+
+  const segment = getSegment()?.addNewSubsegment("MyCustom Segment");
+
+  await new Promise((resolve) => {
+    setTimeout(resolve, 3000);
+  });
+
+  segment?.close();
+  const segment2 = getSegment()?.addNewSubsegment("MyCustom Segment");
+  await new Promise((resolve) => {
+    setTimeout(resolve, 1000);
+  });
+  segment2?.close();
 
   try {
     let response;

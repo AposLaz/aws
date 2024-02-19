@@ -2,6 +2,7 @@ import { Construct } from "constructs";
 import { LambdaStack } from "./stacks/LambdaStack";
 import { ApiStack } from "./stacks/ApiStack";
 import { DynamoDbStack } from "./stacks/DynamoDbStack";
+import { MonitorStack } from "./stacks/MonitorStack";
 
 export class ApplicationStacks extends Construct {
   constructor(scope: Construct) {
@@ -16,5 +17,7 @@ export class ApplicationStacks extends Construct {
     new ApiStack(this, "ApiStack", {
       spaceslambdaIntegrationAPI: lambda.spaceslambdaFunctionAPI,
     });
+
+    new MonitorStack(this, "MonitorStack");
   }
 }

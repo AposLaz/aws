@@ -1,5 +1,5 @@
-import { Stack, StackProps } from "aws-cdk-lib";
-import { Runtime } from "aws-cdk-lib/aws-lambda";
+import { Duration, Stack, StackProps } from "aws-cdk-lib";
+import { Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { Construct } from "constructs";
 import { lastStringOfStackId } from "../services/helper";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
@@ -29,6 +29,8 @@ export class LambdaStack extends Stack {
       environment: {
         TABLE_SPACE_NAME: props.dbSpacesTable.tableName,
       },
+      tracing: Tracing.ACTIVE,
+      timeout: Duration.minutes(1),
     });
 
     //give policy for dynamodb
