@@ -14,4 +14,5 @@ requiredEnvVariables.forEach((name: string) => {
 export default {
   hubspotClient: process.env.HUBSPOT_CLIENT_SECRET as string,
   sqsOfferQuote: process.env.OFFER_SQS_QUEUE as string,
+  SLACK_TOKEN: process.env.SLACK_TOKEN as string,
 };

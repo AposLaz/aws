@@ -2,6 +2,7 @@ import { Construct } from "constructs";
 import { LambdaStack } from "./stacks/LambdaStack";
 import CONFIGS from "./configs";
 import { ApiStack } from "./stacks/ApiStack";
+import { VtmsMonitorStack } from "./stacks/VtmsMonitorStack";
 
 export class StagingHubspotOffer extends Construct {
   constructor(scope: Construct) {
@@ -14,6 +15,10 @@ export class StagingHubspotOffer extends Construct {
 
     new ApiStack(this, "ApiHubspotOffer", {
       offerLambdaFunctionAPI: lambda.offerLambdaFunctionAPI,
+    });
+
+    new VtmsMonitorStack(this, "VtmsMonitor", {
+      slackToken: CONFIGS.SLACK_TOKEN,
     });
   }
 }
