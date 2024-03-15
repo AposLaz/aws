@@ -10,7 +10,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { GetSpacesProps, GetSpacesByIdProps } from "./types";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { fieldsValidator } from "./errorHandler";
-import { generateRandomId } from "./utils";
+import { AuthorizerUser, generateRandomId } from "./utils";
 
 export const getSpaces = async (
   event: APIGatewayProxyEvent,
@@ -144,6 +144,12 @@ export const deleteSpaceById = async (
   event: APIGatewayProxyEvent,
   db: DynamoDBClient
 ): Promise<APIGatewayProxyResult> => {
+  if (!AuthorizerUser(event, "admin")) {
+    return {
+      statusCode: 401,
+      body: "Not Authorized",
+    };
+  }
   if (event.queryStringParameters && event.queryStringParameters.id) {
     const id = event.queryStringParameters.id;
     const command = new DeleteItemCommand({
